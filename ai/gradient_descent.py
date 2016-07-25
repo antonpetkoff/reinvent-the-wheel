@@ -1,4 +1,9 @@
-from math import sqrt
+from math import sqrt, exp
+import inspect
+
+
+def dot(a, b):
+    return sum([a_i * b_i for a_i, b_i in zip(a, b)])
 
 
 def distance(a, b):
@@ -16,6 +21,16 @@ def estimate_gradient(f, v, h=1e-8):
 
 def descent_step(x, direction, step_length):
     return [x_i - step_length * d_i for x_i, d_i in zip(x, direction)]
+
+
+def step_line_search(f, x, gradient, wolfe_const1=0.1, step_max=10, factor=0.3):
+    """Backtracking line search which finds a step length,
+    satisfying the first condition of Wolfe for sufficient decrease."""
+    step = step_max
+    while f(descent_step(x, gradient, step)) > \
+            f(x) + wolfe_const1 * step * -dot(gradient, gradient):
+        step *= factor
+    return step
 
 
 def rosenbrock(v, a=1, b=100):
@@ -41,7 +56,7 @@ def minimize_gradient_descent(f, x0, eps=1e-8):
         iterations += 1
         gradient = estimate_gradient(f, x)
         # x_next = descent_step(x, gradient, 0.01)
-        # TODO: use Wolfe conditions for optimal step length
+        # x_next = descent_step(x, gradient, step_line_search(f, x, gradient))
         x_next = min([descent_step(x, gradient, step)
                       for step in step_lengths], key=f)
         if distance(x, x_next) < eps:
@@ -52,12 +67,37 @@ def minimize_gradient_descent(f, x0, eps=1e-8):
     return x_next
 
 
+def optimal_parameters(nodes, pattern_fn):
+    params_count = len(inspect.getargspec(pattern_fn).args) - 1
+
+    def error_fn(v):
+        return sum([(pattern_fn(x_i, *v) - y_i)**2 for x_i, y_i in nodes])
+
+    return minimize_gradient_descent(error_fn, [1 for _ in range(params_count)])
+
+
+def line(x, a, b):
+    return a * x + b
+
+
+def quadratic(x, a, b, c):
+    return a * x**2 + b * x + c
+
+
+def exponent(x, a, b):
+    return a * exp(b * x)
+
+
 def main():
+    print('gradient descent:')
     print(estimate_gradient(rosenbrock, [1, 1]))    # global minimum
     print(minimize_gradient_descent(rosenbrock, [1.4, 0.5]))
     print(minimize_gradient_descent(matyas, [4.3, 2.92]))
     print(minimize_gradient_descent(beale, [-1.9, -2.3]))
 
+    print('\nleast square regression:')
+    nodes = [(1, 3), (4, 10), (6, 20), (8, 30), (9, 34), (11, 40), (13, 43)]
+    print(optimal_parameters(nodes, line))
 
 if __name__ == '__main__':
     main()
