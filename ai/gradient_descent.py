@@ -1,5 +1,7 @@
 from math import sqrt, exp
+from simulated_annealing import *
 import inspect
+from numpy import random
 
 
 def dot(a, b):
@@ -59,6 +61,7 @@ def minimize_gradient_descent(f, x0, eps=1e-8):
         # x_next = descent_step(x, gradient, step_line_search(f, x, gradient))
         x_next = min([descent_step(x, gradient, step)
                       for step in step_lengths], key=f)
+        print(x_next, f(x_next))
         if distance(x, x_next) < eps:
             break
         x = x_next
@@ -88,16 +91,43 @@ def exponent(x, a, b):
     return a * exp(b * x)
 
 
-def main():
+def test_gradient_descent():
     print('gradient descent:')
     print(estimate_gradient(rosenbrock, [1, 1]))    # global minimum
     print(minimize_gradient_descent(rosenbrock, [1.4, 0.5]))
     print(minimize_gradient_descent(matyas, [4.3, 2.92]))
     print(minimize_gradient_descent(beale, [-1.9, -2.3]))
 
+
+def test_regression():
     print('\nleast square regression:')
-    nodes = [(1, 3), (4, 10), (6, 20), (8, 30), (9, 34), (11, 40), (13, 43)]
-    print(optimal_parameters(nodes, line))
+    nodes_line = [(1, 3), (4, 10), (6, 20), (8, 30), (9, 34),
+                  (11, 40), (13, 43)]
+    print(optimal_parameters(nodes_line, line))
+
+    # WIP
+    nodes_exp = [(1, 1), (2, 2), (3, 5), (4, 9), (5, 18), (6, 34),
+                 (7, 70), (8, 132), (9, 264), (10, 537)]
+    print(optimal_parameters(nodes_exp, quadratic))
+
+
+def neigh(T, x):
+    point = np.array(x)
+    return random.normal(point, max(T, 0.1), point.shape)
+
+
+def test_annealer():
+    # minimize the Rosenbrock function with Simulated Annealing
+    SimulatedAnnealing(True, T_MIN, T_MAX, init,
+                       neigh, rosenbrock_energy,
+                       accept, cooling).execute()
+
+
+def main():
+    # test_gradient_descent()
+    # test_regression()
+    test_annealer()
+
 
 if __name__ == '__main__':
     main()
