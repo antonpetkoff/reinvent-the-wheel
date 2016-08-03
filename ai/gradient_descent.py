@@ -45,7 +45,7 @@ def minimize_gradient_descent(f, x0, eps=1e-8):
         # x_next = descent_step(x, gradient, step_line_search(f, x, gradient))
         x_next = min([descent_step(x, gradient, step)
                       for step in step_lengths], key=f)
-        # print(x_next, f(x_next))
+        print(x_next, f(x_next))
         if distance(x, x_next) < eps:
             break
         x = x_next

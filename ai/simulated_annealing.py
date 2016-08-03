@@ -5,8 +5,25 @@ from numpy import random
 
 
 class SimulatedAnnealing():
-    def __init__(self, minimize, T_min, T_max, init,
-                 neighbour, energy, accept, cooling):
+    # standart configuration parameters and functions for Simulated Annealing
+    T_MIN = 1e-5
+    T_MAX = 1
+
+    # @staticmethod
+    def NEIGHBOUR(T, x):
+        # return x + random.uniform(-T, T, x.shape)
+        return random.normal(x, max(T, 0.1), x.shape)
+
+    # @staticmethod
+    def ACCEPT(T, deltaE, k=0.1):
+        return math.exp(-(deltaE) / k / T)
+
+    # @staticmethod
+    def COOLING(T, best):
+        return T * 0.99
+
+    def __init__(self, energy, start, minimize=True, T_min=T_MIN, T_max=T_MAX,
+                 neighbour=NEIGHBOUR, accept=ACCEPT, cooling=COOLING):
         self.compare = operator.lt if minimize else operator.gt
         self.T_min = T_min
         self.neighbour = neighbour
@@ -15,7 +32,7 @@ class SimulatedAnnealing():
         self.cooling = cooling
 
         self.T = T_max
-        self.best = init()
+        self.best = np.array(start)
         self.step = 0
 
     def iteration(self):
@@ -33,7 +50,7 @@ class SimulatedAnnealing():
         while self.T > self.T_min:
             self.iteration()
             self.cool()
-            self.log()
+            # self.log()
             self.step += 1
         print('\nf(' + str(self.best) + ') = ' + str(self.energy(self.best)))
         return self.best
@@ -43,27 +60,6 @@ class SimulatedAnnealing():
             print(str(self.step) + " T=" + str(self.T) +
                   "\tf(" + str(self.best) + ") = " +
                   str(self.energy(self.best)))
-
-# standart configuration parameters and functions for Simulated Annealing
-T_MIN = 1e-5
-T_MAX = 1
-
-
-def init():
-    return np.array([0.1, 1.4])
-
-
-def neighbour(T, x):
-    # return x + random.uniform(-T, T, x.shape)
-    return random.normal(x, max(T, 0.1), x.shape)
-
-
-def accept(T, deltaE, k=0.1):
-    return math.exp(-(deltaE) / k / T)
-
-
-def cooling(T, best):
-    return T * 0.99
 
 
 def rosenbrock_fn(x, y, a=1, b=100):

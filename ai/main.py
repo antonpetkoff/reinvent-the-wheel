@@ -31,28 +31,24 @@ def test_regression():
                   (11, 40), (13, 43)]
     print(optimal_parameters(nodes_line, line))
 
-    # # WIP
-    # nodes_exp = [(1, 1), (2, 2), (3, 5), (4, 9), (5, 18), (6, 34),
-    #              (7, 70), (8, 132), (9, 264), (10, 537)]
-    # print(optimal_parameters(nodes_exp, quadratic))
-
-
-def neigh(T, x):
-    point = np.array(x)
-    return random.normal(point, max(T, 0.1), point.shape)
+    # WIP: simulated annealing works better than gradient descent here
+    # gradient descent converges very slow
+    nodes_exp = [(1, 1), (2, 2), (3, 5), (4, 9), (5, 18), (6, 34),
+                 (7, 70), (8, 132), (9, 264), (10, 537)]
+    print(optimal_parameters(nodes_exp, exponent))
 
 
 def test_annealer():
     # minimize the Rosenbrock function with Simulated Annealing
-    SimulatedAnnealing(True, T_MIN, T_MAX, init,
-                       neigh, rosenbrock_energy,
-                       accept, cooling).execute()
+    print(SimulatedAnnealing(rosenbrock_energy, [0.1, 1.4]).execute())
+    print(SimulatedAnnealing(matyas, [4.3, 2.92]).execute())
+    print(SimulatedAnnealing(beale, [-1.9, -2.3]).execute())
 
 
 def main():
-    test_gradient_descent()
+    # test_gradient_descent()
     test_regression()
-    test_annealer()
+    # test_annealer()
 
 
 if __name__ == '__main__':
