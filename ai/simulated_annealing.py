@@ -66,9 +66,9 @@ def cooling(T, best):
     return T * 0.99
 
 
-def rosenbrock(x, y, a=1, b=100):
+def rosenbrock_fn(x, y, a=1, b=100):
     return (a - x)**2 + b * (y - x**2)**2
 
 
 def rosenbrock_energy(vector):
-    return rosenbrock(*vector)
+    return rosenbrock_fn(*vector)
