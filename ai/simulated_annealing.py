@@ -68,3 +68,7 @@ def rosenbrock_fn(x, y, a=1, b=100):
 
 def rosenbrock_energy(vector):
     return rosenbrock_fn(*vector)
+
+
+def simulated_annealing(fn, start):
+    return SimulatedAnnealing(fn, start).execute()
