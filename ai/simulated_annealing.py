@@ -9,16 +9,13 @@ class SimulatedAnnealing():
     T_MIN = 1e-5
     T_MAX = 1
 
-    # @staticmethod
     def NEIGHBOUR(T, x):
         # return x + random.uniform(-T, T, x.shape)
         return random.normal(x, max(T, 0.1), x.shape)
 
-    # @staticmethod
     def ACCEPT(T, deltaE, k=0.1):
         return math.exp(-(deltaE) / k / T)
 
-    # @staticmethod
     def COOLING(T, best):
         return T * 0.99
 

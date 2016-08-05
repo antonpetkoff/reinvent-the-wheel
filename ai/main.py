@@ -1,8 +1,6 @@
 from gradient_descent import *
 from simulated_annealing import *
 from regression import *
-from numpy import random
-from utils import plot
 
 
 def rosenbrock(v, a=1, b=100):
@@ -37,8 +35,7 @@ def test_regression():
     nodes_exp = [(1, 1), (2, 2), (3, 5), (4, 9), (5, 18), (6, 34),
                  (7, 70), (8, 132), (9, 264), (10, 537)]
     # TODO: quadratic is a 3D function and we can't yet plot it
-    # TODO: see numpy's exp in order to plot the exponenital regression
-    print(optimal_parameters(nodes_exp, line, simulated_annealing))
+    print(optimal_parameters(nodes_exp, exponent, simulated_annealing))
 
     # quadratic regression with gradient descent for 220187 iterations
     # ends @ point [12.037849628337426, -87.01024837157456, 122.29910782823572]
@@ -51,15 +48,10 @@ def test_annealer():
     print(SimulatedAnnealing(beale, [-1.9, -2.3]).execute())
 
 
-def test_plot():
-    plot(rosenbrock_fn, (-2, 3), (-2, 3))
-
-
 def main():
     # test_gradient_descent()
     test_regression()
     # test_annealer()
-    # test_plot()
 
 if __name__ == '__main__':
     main()

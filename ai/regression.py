@@ -1,8 +1,8 @@
 import inspect
-from math import exp
 from gradient_descent import *
 from simulated_annealing import *
 from utils import *
+import numpy as np
 
 
 def optimal_parameters(nodes, pattern_fn, method):
@@ -13,7 +13,7 @@ def optimal_parameters(nodes, pattern_fn, method):
 
     def plot_fn(*v):
         return error_fn(v)
-    plot(plot_fn, 1, (-100, 100), (-100, 100))
+    plot(plot_fn, 0.5, (-30, 30), (-30, 30))
 
     return method(error_fn, [1 for _ in range(params_count)])
 
@@ -27,4 +27,4 @@ def quadratic(x, a, b, c):
 
 
 def exponent(x, a, b):
-    return a * exp(b * x)
+    return a * np.exp(b * x)
