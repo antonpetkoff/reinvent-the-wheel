@@ -1,12 +1,4 @@
-from math import sqrt
-
-
-def dot(a, b):
-    return sum([a_i * b_i for a_i, b_i in zip(a, b)])
-
-
-def distance(a, b):
-    return sqrt(sum([(a_i - b_i)**2 for a_i, b_i in zip(a, b)]))
+from utils import dot, distance
 
 
 def partial_difference_quotient(f, v, i, h):

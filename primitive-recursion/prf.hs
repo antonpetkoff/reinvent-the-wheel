@@ -18,5 +18,9 @@ not = Z
 plus :: PRF
 plus = R (I 1 0) (C S [I 3 0])
 
+mult :: PRF
+mult = R Z (C plus [(I 3 0), (I 3 2)])
+
 main = do
     print $ eval plus [10, 15]
+    print $ eval mult [2, 5]
